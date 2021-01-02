@@ -189,6 +189,4 @@ foreach ($m49Code in $m49Codes) {
 
 $regions = $regions | ConvertTo-Csv
 
-# $regions
-
 $regions | Out-File regions.csv
