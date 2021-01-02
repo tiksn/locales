@@ -74,6 +74,7 @@ $regions = $regions | ForEach-Object {
     
     [PSCustomObject]@{
         Name                         = $_.Name
+        Parent                       = $null
         # DisplayName                  = $_.DisplayName
         EnglishName                  = $_.EnglishName
         # NativeName                   = $_.NativeName
@@ -152,6 +153,38 @@ $regions = $regions | ForEach-Object {
     }
 
     $_.Group[0]
+}
+
+$m49Codes = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/wooorm/un-m49/main/index.json'
+foreach ($m49Code in $m49Codes) {
+    $m49Region = $regions | Where-Object { ($_.M49 -eq $m49Code.code) -or (($null -ne $m49Code.iso3166) -and ($_.ThreeLetterISORegionName -eq $m49Code.iso3166)) }
+    if ($null -eq $m49Region) {
+        $regions += [PSCustomObject]@{
+            Name                         = $m49Code.code
+            Parent                       = $null
+            EnglishName                  = $m49Code.name
+            TwoLetterISORegionName       = $null
+            ThreeLetterISORegionName     = $null
+            M49                          = $m49Code.code
+            ThreeLetterWindowsRegionName = $null
+            UnicodeFlag                  = $null
+        }
+    }
+    elseif (($null -ne $m49Code.iso3166) -and ($m49Region.ThreeLetterISORegionName -eq $m49Code.iso3166)) {
+        $m49Region.M49 = $m49Code.code
+    }
+    elseif ($m49Region.M49 -eq $m49Code.code) {
+        $m49Region.EnglishName = $m49Code.name
+    }
+}
+foreach ($m49Code in $m49Codes) {
+    if ($null -ne $m49Code.parent) {
+        $m49Region = $regions | Where-Object { ($_.M49 -eq $m49Code.code) }
+        $m49ParentRegion = $regions | Where-Object { ($_.M49 -eq $m49Code.parent) }
+        if (($null -ne $m49Region) -and ($null -ne $m49ParentRegion)) {
+            $m49Region.Parent = $m49ParentRegion.Name
+        }
+    }
 }
 
 $regions = $regions | ConvertTo-Csv
