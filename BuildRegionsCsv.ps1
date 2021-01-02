@@ -16,6 +16,7 @@ $regions = $regions | ForEach-Object {
     $flag = $null
     $twoLetterISORegionName = $null
     $threeLetterISORegionName = $null
+    $threeLetterWindowsRegionName = $_.ThreeLetterWindowsRegionName
     $m49 = $null
 
     $nonNumeric = ($_.TwoLetterISORegionName.ToUpperInvariant().ToCharArray() | Where-Object {
@@ -59,6 +60,18 @@ $regions = $regions | ForEach-Object {
         $flag = [string]::Concat($flagChars)
     }
 
+    if ([string]::IsNullOrWhiteSpace($threeLetterWindowsRegionName)) {
+        $threeLetterWindowsRegionName = $null
+    }
+
+    if ([string]::IsNullOrWhiteSpace($twoLetterISORegionName)) {
+        $twoLetterISORegionName = $null
+    }
+
+    if ([string]::IsNullOrWhiteSpace($threeLetterISORegionName)) {
+        $threeLetterISORegionName = $null
+    }
+    
     [PSCustomObject]@{
         Name                         = $_.Name
         # DisplayName                  = $_.DisplayName
@@ -67,8 +80,8 @@ $regions = $regions | ForEach-Object {
         TwoLetterISORegionName       = $twoLetterISORegionName
         ThreeLetterISORegionName     = $threeLetterISORegionName
         M49                          = $m49
-        ThreeLetterWindowsRegionName = $_.ThreeLetterWindowsRegionName
-        GeoId                        = $_.GeoId
+        ThreeLetterWindowsRegionName = $threeLetterWindowsRegionName
+        # GeoId                        = $_.GeoId
         # CurrencyEnglishName          = $_.CurrencyEnglishName
         # CurrencyNativeName           = $_.CurrencyNativeName
         # CurrencySymbol               = $_.CurrencySymbol
@@ -122,12 +135,12 @@ $regions = $regions | ForEach-Object {
                 }
             }
 
-            if (($_.Group[$i].GeoId) -ne ($_.Group[$j].GeoId)) {
-                throw [PSCustomObject]@{
-                    Item1 = $_.Group[$i]
-                    Item2 = $_.Group[$j]
-                }
-            }
+            # if (($_.Group[$i].GeoId) -ne ($_.Group[$j].GeoId)) {
+            #     throw [PSCustomObject]@{
+            #         Item1 = $_.Group[$i]
+            #         Item2 = $_.Group[$j]
+            #     }
+            # }
 
             # if ($_.Group[$i].IsMetric -ne $_.Group[$j].IsMetric) {
             #     throw [PSCustomObject]@{
