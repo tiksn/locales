@@ -96,7 +96,7 @@ $regions = $regions | Group-Object -Property Name
 
 $regions = $regions | ForEach-Object {
     if ($_.Values.Count -ne 1) {
-        throw "Group values have to have one and only one item."
+        throw 'Group values have to have one and only one item.'
     }
 
     for ($i = 0; $i -lt ($_.Group.Count - 1); $i++) {
@@ -155,7 +155,99 @@ $regions = $regions | ForEach-Object {
     $_.Group[0]
 }
 
-$m49Codes = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/wooorm/un-m49/main/index.json'
+$methodology = Get-Content -Path '.\UNSD-Methodology.csv' | ConvertFrom-Csv
+$m49Codes = @()
+
+$m49Codes += $methodology
+| ForEach-Object {
+    [PSCustomObject]@{
+        code    = $_.'Global Code'
+        name    = $_.'Global Name'
+        iso3166 = $null
+        parent  = $null
+    }
+}
+| Sort-Object -Property code
+| Get-Unique -AsString
+
+$m49Codes += $methodology
+| Where-Object { $_.'Region Code' }
+| ForEach-Object {
+    [PSCustomObject]@{
+        code    = $_.'Region Code'
+        name    = $_.'Region Name'
+        iso3166 = $null
+        parent  = $_.'Global Code'
+    }
+}
+| Sort-Object -Property code
+| Get-Unique -AsString
+
+$m49Codes += $methodology
+| Where-Object { $_.'Sub-region Code' }
+| ForEach-Object {
+    [PSCustomObject]@{
+        code    = $_.'Sub-region Code'
+        name    = $_.'Sub-region Name'
+        iso3166 = $null
+        parent  = $_.'Region Code'
+    }
+}
+| Sort-Object -Property code
+| Get-Unique -AsString
+
+$m49Codes += $methodology
+| Where-Object { $_.'Intermediate Region Code' }
+| ForEach-Object {
+    [PSCustomObject]@{
+        code    = $_.'Intermediate Region Code'
+        name    = $_.'Intermediate Region Name'
+        iso3166 = $null
+        parent  = $_.'Sub-region Code'
+    }
+}
+| Sort-Object -Property code
+| Get-Unique -AsString
+
+$m49Codes += $methodology
+| Where-Object { -not $_.'Intermediate Region Code' -and $_.'Sub-region Code' }
+| ForEach-Object {
+    [PSCustomObject]@{
+        code    = $_.'M49 Code'
+        name    = $_.'Country or Area'
+        iso3166 = $_.'ISO-alpha3 Code'
+        parent  = $_.'Sub-region Code'
+    }
+}
+| Sort-Object -Property code
+| Get-Unique -AsString
+
+$m49Codes += $methodology
+| Where-Object { -not $_.'Intermediate Region Code' -and -not $_.'Sub-region Code' -and -not $_.'Region Code' }
+| ForEach-Object {
+    [PSCustomObject]@{
+        code    = $_.'M49 Code'
+        name    = $_.'Country or Area'
+        iso3166 = $_.'ISO-alpha3 Code'
+        parent  =  $_.'Global Code'
+    }
+}
+| Sort-Object -Property code
+| Get-Unique -AsString
+
+$m49Codes += $methodology
+| Where-Object { $_.'M49 Code' }
+| ForEach-Object {
+    [PSCustomObject]@{
+        code    = $_.'M49 Code'
+        name    = $_.'Country or Area'
+        iso3166 = $_.'ISO-alpha3 Code'
+        parent  = $_.'Intermediate Region Code'
+    }
+}
+| Sort-Object -Property code
+| Get-Unique -AsString
+
 foreach ($m49Code in $m49Codes) {
     $m49Region = $regions | Where-Object { ($_.M49 -eq $m49Code.code) -or (($null -ne $m49Code.iso3166) -and ($_.ThreeLetterISORegionName -eq $m49Code.iso3166)) }
     if ($null -eq $m49Region) {
