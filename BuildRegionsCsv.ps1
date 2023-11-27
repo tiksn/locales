@@ -71,7 +71,7 @@ $regions = $regions | ForEach-Object {
     if ([string]::IsNullOrWhiteSpace($threeLetterISORegionName)) {
         $threeLetterISORegionName = $null
     }
-    
+
     [PSCustomObject]@{
         Name                         = $_.Name
         Parent                       = $null
@@ -229,7 +229,7 @@ $m49Codes += $methodology
         code    = $_.'M49 Code'
         name    = $_.'Country or Area'
         iso3166 = $_.'ISO-alpha3 Code'
-        parent  =  $_.'Global Code'
+        parent  = $_.'Global Code'
     }
 }
 | Sort-Object -Property code
@@ -279,6 +279,16 @@ foreach ($m49Code in $m49Codes) {
     }
 }
 
+foreach ($region in $regions) {
+    # edge cases
+    if ($region.Name -eq 'TW') {
+        $region.Parent = '030'
+    }
+    elseif ($region.Name -eq 'XK') {
+        $region.Parent = '039'
+    }
+}
+
 $regions = $regions | ConvertTo-Csv
 
-$regions | Out-File regions.csv
+$regions | Out-File Regions.csv
