@@ -59,7 +59,7 @@
 "HUF","Hungarian Forint","HUF","Ft"
 "IDR","Indonesian Rupiah","IDR","Rp"
 "ILS","Israeli New Shekel","ILS","₪"
-"INR","Indian Rupee","INR",
+"INR","Indian Rupee","INR","₹"
 "IQD","Iraqi Dinar","IQD",
 "IRR","Iranian Rial","IRR","﷼"
 "ISK","Icelandic Króna","ISK","kr"
@@ -132,7 +132,7 @@
 "TMT","Turkmenistani Manat","TMT",
 "TND","Tunisian Dinar","TND",
 "TOP","Tongan Paʻanga","TOP",
-"TRY","Turkish Lira","TRY",
+"TRY","Turkish Lira","TRY","₺"
 "TTD","Trinidad & Tobago Dollar","TTD","TT$"
 "TWD","New Taiwan Dollar","TWD","NT$"
 "TZS","Tanzanian Shilling","TZS",
