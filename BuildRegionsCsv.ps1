@@ -155,7 +155,7 @@ $regions = $regions | ForEach-Object {
     $_.Group[0]
 }
 
-$methodology = Get-Content -Path '.\UNSD-Methodology.csv' | ConvertFrom-Csv
+$methodology = Get-Content -Path '.\UNSD-Methodology.csv' | ConvertFrom-Csv -Delimiter ';'
 $m49Codes = @()
 
 $m49Codes += $methodology
