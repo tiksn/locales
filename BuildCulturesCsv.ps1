@@ -16,4 +16,4 @@ $cultures = $cultures | ForEach-Object {
 
 $cultures = $cultures | ConvertTo-Csv
 
-$cultures | Out-File cultures.csv
+$cultures | Out-File Cultures.csv
