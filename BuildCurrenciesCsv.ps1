@@ -19,7 +19,6 @@ $regions = $cultures
 }
 
 $currencies = $regions | ForEach-Object {
-    
     [PSCustomObject]@{
         Name                = $_.ISOCurrencySymbol
         CurrencyEnglishName = $_.CurrencyEnglishName
@@ -33,7 +32,7 @@ $currencies = $currencies | Group-Object -Property Name
 
 $currencies = $currencies | ForEach-Object {
     if ($_.Values.Count -ne 1) {
-        throw "Group values have to have one and only one item."
+        throw 'Group values have to have one and only one item.'
     }
 
     for ($i = 0; $i -lt ($_.Group.Count - 1); $i++) {
@@ -73,45 +72,36 @@ $currencies = $currencies | ForEach-Object {
 
 $result = Invoke-WebRequest -Uri 'https://www.xe.com/symbols.php'
 $result = $result.Content
-$result = $result.Split("`n")
-$result = $result[180]
-$result = $result.Trim()
-$result = $result.Substring("</tr>".Length)
-$result = $result.Substring(0, $result.Length - "</table>".Length)
-while ($true) {
-    $imgIndex = $result.IndexOf("<img")
-    if ($imgIndex -lt 0) {
-        break;
+$bodyStart = $result.IndexOf('<body')
+$bodyEnd = $result.IndexOf('</body>') + '</body>'.Length
+$body = [xml]$result.Substring($bodyStart, $bodyEnd - $bodyStart)
+$currencyUnicodeSymbols = $body
+| Select-Xml -XPath '//*[@id="__next"]/div[3]/div[2]/section[2]/section/ul/li'
+| Select-Object -Skip 1 # Skip Title Row
+| Select-Object -ExpandProperty Node
+| ForEach-Object {
+    $code = $PSItem | Select-Xml -XPath 'div[3]'
+    $code = $code.Node.InnerText
+
+    $unicodeDecimals = $PSItem | Select-Xml -XPath 'div[6]'
+    $unicodeDecimals = $unicodeDecimals.Node.InnerText.Split(',', [StringSplitOptions]::TrimEntries) | ForEach-Object { [int]$PSItem }
+    $unicodeChars = $unicodeDecimals | ForEach-Object {
+        [char]::ConvertFromUtf32( $_ )
     }
-    $beforeImage = $result.Substring(0, $imgIndex)
-    $imageAndTheRest = $result.Remove(0, $imgIndex)
-    $imageEndIndex = $imageAndTheRest.IndexOf('>')
-    if ($imageEndIndex -ge 0) {
-        $afterImage = $imageAndTheRest.Substring($imageEndIndex + 1)
-        
-        $result = $beforeImage + $afterImage
+
+    [PSCustomObject]@{
+        Code          = $code
+        UnicodeSymbol = [string]::new($unicodeChars)
     }
 }
-$result = $result.Replace('&nbsp;', ' ')
-$result = "<doc> $result </doc>"
-$result = [xml]$result
 
-foreach ($node in $result.DocumentElement.ChildNodes) {
-    $code = $node.ChildNodes[1].InnerText
-    $unicodeDecimals = $node.ChildNodes[5].InnerText.Trim()
-    if (-not [string]::IsNullOrEmpty($unicodeDecimals)) {
-        $currency = $currencies | Where-Object { $_.Name -eq $code }
-        if ($null -ne $currency) {
-            $unicodeDecimals = $unicodeDecimals -split ','
-            $unicodeDecimals = $unicodeDecimals | ForEach-Object { [int]$_ }
-            $unicodeChars = $unicodeDecimals | ForEach-Object {
-                [char]::ConvertFromUtf32( $_ )
-            }
-            $currency.UnicodeSymbol = [string]::new($unicodeChars)
-        }
+foreach ($currencyUnicodeSymbol in $currencyUnicodeSymbols) {
+    $currency = $currencies | Where-Object { $PSItem.Name -eq $currencyUnicodeSymbol.Code }
+    if ($null -ne $currency) {
+        $currency.UnicodeSymbol = $currencyUnicodeSymbol.UnicodeSymbol
     }
 }
 
 $currencies = $currencies | ConvertTo-Csv
 
-$currencies | Out-File currencies.csv
+$currencies | Out-File Currencies.csv
