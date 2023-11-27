@@ -1,5 +1,6 @@
 "Name","Parent","EnglishName","TwoLetterISORegionName","ThreeLetterISORegionName","M49","ThreeLetterWindowsRegionName","UnicodeFlag"
 "001",,"World",,,"001",,"🇺🇳"
+"029","419","Caribbean",,,"029",,
 "150","001","Europe",,,"150",,"🇪🇺"
 "419","019","Latin America and the Caribbean",,,"419",,
 "AD","039","Andorra","AD","AND","020","AND","🇦🇩"
@@ -79,7 +80,7 @@
 "GD","029","Grenada","GD","GRD","308","GRD","🇬🇩"
 "GE","145","Georgia","GE","GEO","268","GEO","🇬🇪"
 "GF","005","French Guiana","GF","GUF","254","GUF","🇬🇫"
-"GG","830","Guernsey","GG","GGY","831","GGY","🇬🇬"
+"GG","154","Guernsey","GG","GGY","831","GGY","🇬🇬"
 "GH","011","Ghana","GH","GHA","288","GHA","🇬🇭"
 "GI","039","Gibraltar","GI","GIB","292","GIB","🇬🇮"
 "GL","021","Greenland","GL","GRL","304","GRL","🇬🇱"
@@ -107,7 +108,7 @@
 "IR","034","Iran","IR","IRN","364","IRN","🇮🇷"
 "IS","154","Iceland","IS","ISL","352","ISL","🇮🇸"
 "IT","039","Italy","IT","ITA","380","ITA","🇮🇹"
-"JE","830","Jersey","JE","JEY","832","JEY","🇯🇪"
+"JE","154","Jersey","JE","JEY","832","JEY","🇯🇪"
 "JM","029","Jamaica","JM","JAM","388","JAM","🇯🇲"
 "JO","145","Jordan","JO","JOR","400","JOR","🇯🇴"
 "JP","030","Japan","JP","JPN","392","JPN","🇯🇵"
@@ -223,7 +224,7 @@
 "TR","145","Turkey","TR","TUR","792","TUR","🇹🇷"
 "TT","029","Trinidad & Tobago","TT","TTO","780","TTO","🇹🇹"
 "TV","061","Tuvalu","TV","TUV","798","TUV","🇹🇻"
-"TW",030,"Taiwan","TW","TWN",,"TWN","🇹🇼"
+"TW","030","Taiwan","TW","TWN",,"TWN","🇹🇼"
 "TZ","014","Tanzania","TZ","TZA","834","TZA","🇹🇿"
 "UA","151","Ukraine","UA","UKR","804","UKR","🇺🇦"
 "UG","014","Uganda","UG","UGA","800","UGA","🇺🇬"
@@ -240,7 +241,7 @@
 "VU","054","Vanuatu","VU","VUT","548","VUT","🇻🇺"
 "WF","061","Wallis & Futuna","WF","WLF","876","WLF","🇼🇫"
 "WS","061","Samoa","WS","WSM","882","WSM","🇼🇸"
-"XK",039,"Kosovo","XK",,,,"🇽🇰"
+"XK","039","Kosovo","XK",,,,"🇽🇰"
 "YE","145","Yemen","YE","YEM","887","YEM","🇾🇪"
 "YT","014","Mayotte","YT","MYT","175","MYT","🇾🇹"
 "ZA","018","South Africa","ZA","ZAF","710","ZAF","🇿🇦"
@@ -272,12 +273,9 @@
 "014","202","Eastern Africa",,,"014",,
 "017","202","Middle Africa",,,"017",,
 "018","202","Southern Africa",,,"018",,
-"029","419","Caribbean",,,"029",,
-"830","154","Channel Islands",,,"830",,
 "334","053","Heard Island and McDonald Islands",,,"334",,
 "732","015","Western Sahara",,,"732",,
 "010","001","Antarctica",,,"010",,
 "074","005","Bouvet Island",,,"074",,
 "239","005","South Georgia and the South Sandwich Islands",,,"239",,
 "260","014","French Southern Territories",,,"260",,
-"680","830","Sark",,,"680",,
