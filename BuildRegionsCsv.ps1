@@ -12,6 +12,9 @@ $regions = $cultures
     $region
 }
 
+$sovereignties = $null
+$sovereignties = .\ListSovereignty.ps1
+
 $regions = $regions | ForEach-Object {
     $flag = $null
     $twoLetterISORegionName = $null
@@ -72,6 +75,13 @@ $regions = $regions | ForEach-Object {
         $threeLetterISORegionName = $null
     }
 
+    $sovereignty = $sovereignties | Where-Object { $_.TwoLetterCode -eq $twoLetterISORegionName }
+    $country = $null
+
+    if ($sovereignty -ne $null) {
+        $country = $sovereignty.Sovereignty
+    }
+
     [PSCustomObject]@{
         Name                         = $_.Name
         Parent                       = $null
@@ -89,6 +99,7 @@ $regions = $regions | ForEach-Object {
         # ISOCurrencySymbol            = $_.ISOCurrencySymbol
         # IsMetric                     = [int]$_.IsMetric
         UnicodeFlag                  = $flag
+        Country                      = $country
     }
 }
 
@@ -260,6 +271,7 @@ foreach ($m49Code in $m49Codes) {
             M49                          = $m49Code.code
             ThreeLetterWindowsRegionName = $null
             UnicodeFlag                  = $null
+            Country                      = $null
         }
     }
     elseif (($null -ne $m49Code.iso3166) -and ($m49Region.ThreeLetterISORegionName -eq $m49Code.iso3166)) {
