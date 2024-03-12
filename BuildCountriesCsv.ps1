@@ -15,6 +15,20 @@ $countries = $cultures
     $_.Name.Length -eq 2
 }
 
+$sovereignties = $null
+$sovereignties = .\ListSovereignty.ps1
+
+$countries = $countries | Where-Object {
+    $country = $_
+    $sovereignty = $null
+    $sovereignty = $sovereignties | Where-Object { $_.TwoLetterCode -eq $country.TwoLetterISORegionName }
+    if ($sovereignty -eq $null) {
+        throw 'Unknown sovereignty'
+    }
+
+    $sovereignty.Independent
+}
+
 $countries = $countries | ForEach-Object {
     $flag = $null
     $twoLetterISOCountryName = $null
